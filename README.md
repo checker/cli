@@ -28,5 +28,10 @@ As this is just a personal side project, I only work on it when I have time, so 
 
 If you are not a developer, you can also help me greatly by opening issues with bugs you encounter while running the script.
 
+If you would like to see further improvements and updates for free, please consider donating a few dollars as it really helps me to set aside time out of my busy schedule to work on improving the script. All contributions are great appreciated! 🙂
+
+[PayPal](https://paypal.me/croc)
+[Square Cash](https://cash.me/$croc)
+
 
 
