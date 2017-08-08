@@ -12,16 +12,15 @@ proxies = []
 theChosenOne = ""
 proxyDict = {}
 pattern = "(%[w][o][r][d]%)"
-steam_url_pattern = "^https?:\/\/w?w?w?.?(steamcommunity.com\/id\/)"
-beam_url_pattern = "^https?:\/\/w?w?w?.?(beam.pro\/api\/v1\/channels\/)"
-twitch_url_pattern = "^https?:\/\/w?w?w?.?(twitch.tv\/)"
+steam_url_pattern = r"^https?:\/\/w?w?w?.?(steamcommunity.com\/id\/)"
+mixer_url_pattern = r"^https?:\/\/w?w?w?.?(mixer.com\/api\/v1\/channels\/)"
+twitch_url_pattern = r"^https?:\/\/w?w?w?.?(twitch.tv\/)"
 
 # Reads configuration file
 config = configparser.ConfigParser()
 config.read('config.ini')
 url = config['config']['siteToSearch']
 list = config['config']['wordList']
-text = config['config']['textToFind']
 proxy = config['config']['proxyList']
 
 def replaceVar():
@@ -112,7 +111,7 @@ def checkTwitch(links):
                 file.write(links[l] + "\n")
                 file.close()
 
-def checkBeam(links):
+def checkMixer(links):
     numLinks = links.__len__()
     for l in range(numLinks):
         response = requests.get(links[l])
@@ -130,9 +129,9 @@ def main():
     if re.match(steam_url_pattern, url):
         print("steam")
         checkSteamID(sites)
-    elif re.match(beam_url_pattern, url):
-        print("beam")
-        checkBeam(sites)
+    elif re.match(mixer_url_pattern, url):
+        print("mixer")
+        checkMixer(sites)
     elif re.match(twitch_url_pattern, url):
         print("twitch")
         checkTwitch(sites)

@@ -11,15 +11,16 @@ This is a script I made a while back to check the availability of OG words as ha
 
 ### Known Supported Services
 - Twitter
-- Instagram (partial support)
+- Instagram
 - Steam ID URLs
 - Steam Group URLs
-- Beam.pro
+- Mixer (formerly Beam.pro)
 - Twitch.tv
 - Github
 
 ### Known Unsupported Services
 - Snapchat
+- Kik
 - Minecraft
 
 ### Comptability
