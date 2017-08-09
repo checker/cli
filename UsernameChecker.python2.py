@@ -16,6 +16,7 @@ pattern = "(%[w][o][r][d]%)"
 steam_url_pattern = r"^https?:\/\/w?w?w?.?(steamcommunity.com\/id\/)"
 mixer_url_pattern = r"^https?:\/\/w?w?w?.?(mixer.com\/api\/v1\/channels\/)"
 twitch_url_pattern = r"^https?:\/\/w?w?w?.?(twitch.tv\/)"
+mc_url_pattern = r"^https?:\/\/(api.mojang.com\/users\/profiles\/minecraft\/)"
 
 # Reads configuration file
 parser = SafeConfigParser()
@@ -125,6 +126,25 @@ def checkMixer(links):
         else:
             print(links[l] + " is " + colored('TAKEN', 'red', attrs=['bold']))
 
+def checkMinecraft(links):
+    numLinks = links.__len__()
+    for l in range(numLinks):
+        response = requests.get(links[l])
+        if response.status_code == 200:
+            json_data = json.loads(response.text)
+            if 'name' in json_data:
+                print(json_data['name'] + " is " + colored('TAKEN', 'red', attrs=['bold']))
+            elif 'errorMessage' in json_data:
+                print(json_data['errorMessage'])
+        elif response.status_code == 204:
+            word = re.search('([a-zA-Z0-9]{2,16})$', links[l])
+            print(word.group(0) + " is " + colored('AVAILABLE', 'green', attrs=['bold']))
+            file = open('available.txt', 'a')
+            file.write(links[l] + "\n")
+            file.close()
+        else:
+            print(response.status_code + " An error occured")
+
 def main():
     replaceVar()
     if re.match(steam_url_pattern, url):
@@ -136,6 +156,9 @@ def main():
     elif re.match(twitch_url_pattern, url):
         print("twitch")
         checkTwitch(sites)
+    elif re.match(mc_url_pattern, url):
+        print("minecraft")
+        checkMinecraft(sites)
     else:
         print("other")
         parsePages(sites)

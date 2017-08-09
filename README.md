@@ -10,6 +10,7 @@ This is a script I made a while back to check the availability of OG words as ha
 - Full GUI Application
 
 ### Known Supported Services
+- Minecraft
 - Twitter
 - Instagram
 - Steam ID URLs
@@ -21,7 +22,6 @@ This is a script I made a while back to check the availability of OG words as ha
 ### Known Unsupported Services
 - Snapchat
 - Kik
-- Minecraft
 
 ### Comptability
 The script is compatible with Python 2.7 and 3.0+ on all OS platforms capable of running Python.
