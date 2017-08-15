@@ -11,20 +11,22 @@ This is a script I made a while back to check the availability of OG words as ha
 
 ### Known Supported Services
 - Minecraft
-- Twitter
-- Instagram
+- Twitter (IMPROVED in 1.4)
+- Instagram* (IMPROVED in 1.4, sometimes doesn't work still)
 - Steam ID URLs
 - Steam Group URLs
 - Mixer (formerly Beam.pro)
-- Twitch.tv
+- Soundcloud
 - Github
+- About.me
 
 ### Known Unsupported Services
 - Snapchat
 - Kik
 
 ### Comptability
-The script is compatible with Python 2.7 and 3.0+ on all OS platforms capable of running Python.
+Version `1.4` is only compatible with Python 3+
+Verion `1.0-1.3` is compatible with Python 2 & 3
 
 ### Installation
 
@@ -34,12 +36,6 @@ The script is compatible with Python 2.7 and 3.0+ on all OS platforms capable of
 
 3. Install the dependencies using the following command
 
-    #### For Python 2
-    ```
-    pip install configparser requests termcolor bs4
-    ```
-
-    #### For Python 3
     ```
     pip3 install configparser requests termcolor bs4
     ```
@@ -48,14 +44,17 @@ The script is compatible with Python 2.7 and 3.0+ on all OS platforms capable of
 
 5. Run the script via command line using the following command
 
-    #### For Python 2
     ```
-    python UsernameChecker.python2.py
+    python3 UsernameChecker.py
     ```
 
-    #### For Python 3
+    You can optionally supply some additional command-line arguments for faster use.
     ```
-    python3 UsernameChecker.python3.py
+    python3 UsernameChecker.py -l {list filename} -o {output filename} {site number}
+    ```
+    Example:
+    ```
+    python3 UsernameChecker.py -l word_lists/HOT-WORDS -o output.txt 2
     ```
 
 
