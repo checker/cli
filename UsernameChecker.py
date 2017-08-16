@@ -66,16 +66,17 @@ def available(word, service, link):
     fx.write(link + "\n")
     fx.close()
 
-def log_result(response, word, link, element=None, matches=None):
+def log_result(response, word, link, matches=None):
     service = re.search(DOMAIN, link).group(1)
-    if (matches != None) or (element != None):
-        if matches:
+    if matches != None:
+        if matches[0] != []:
             available(word, service, link)
+        elif matches[1]:
+            taken(word, service)
+        elif matches[2]:
+            taken(word, service)
         else:
-            if element:
-                taken(word, service)
-            else:
-                available(word, service, link)
+            print("The username " + word + " requires manual verification on " + service + " (" + str(response.status_code) + ")")
         
     elif response.status_code == 200:
         if int(SITE) == 3: # Twitter
@@ -152,21 +153,33 @@ def parse_page(words):
         page = r.content
         soup = BeautifulSoup(page, "html.parser")
         matches = []
-        elem = ""
         if int(SITE) == 5:
-            matches = soup.find_all("h3")
-            elem = soup.find('div', attrs={'class': 'profile_private_info'})
+            # Available
+            match1 = soup.body.findAll(text='The specified profile could not be found.')
+            # Taken
+            match2 = soup.body.findAll(text='This profile is private.')
+            match3 = soup.find('div', attrs={'class': 'profile_header'})
+            
+            matches = [match1, match2, match3]
         elif int(SITE) == 6:
-            matches = soup.find_all("h3")
-            elem = soup.find('div', attrs={'class': 'error_ctn'})
+            # Available
+            match1 = soup.body.findAll(text='No group could be retrieved for the given URL.')
+            # Taken
+            match2 = soup.body.findAll(text='Request To Join')
+            match3 = soup.find('div', attrs={'class': 'grouppage_header'})
+
+            matches = [match1, match2, match3]
         elif int(SITE) == 8:
-            matches = soup.find_all("h3")
-            elem = soup.find('div', attrs={'id': 'player'})
-            print(matches)
-            print(elem)
+            # Available
+            match1 = soup.body.findAll(text='Sorry. Unless you\’ve got a time machine, that content is unavailable.')
+            # Taken
+            match2 = soup.find('div', attrs={'id': 'player'})
+            match3 = soup.body.findAll(text='The community has closed this channel due to terms of service violations.')
+
+            matches = [match1, match2, match3]
         else:
             print("Wrong site!")
-        log_result(r, words[w], link, element=elem, matches=matches)
+        log_result(r, words[w], link, matches=matches)
 
 def send_post(words):
     cookie = get_cookie()
