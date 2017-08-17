@@ -37,10 +37,11 @@ URLS = {
     5:"https://steamcommunity.com/id/%word%",
     6:"https://steamcommunity.com/groups/%word%",
     7:"https://soundcloud.com/%word%",
-    8:"https://twitch.tv/%word%",
+    8:"https://passport.twitch.tv/usernames/%word%",
     9:"https://mixer.com/api/v1/channels/%word%",
     10:"https://github.com/%word%",
-    11:"https://about.me/%word%"
+    11:"https://about.me/%word%",
+    12:"https://youtube.com/%word%"
 }
 
 def generate_pw(size=16, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase):
@@ -105,10 +106,17 @@ def log_result(response, word, link, matches=None):
                 available(word, service, link)
             else:
                 taken(word, service)
+        elif int(SITE) == 8: # Twitch
+            taken(word, service)
         else:
             taken(word, service)
-    elif (int(SITE) == 2) and (response.status_code == 204):
-        available(word, service, link)
+    elif response.status_code == 204:
+        if int(SITE) == 2:
+            available(word, service, link)
+        elif int(SITE) == 8:
+            available(word, service, link)
+        else:
+            print("The username " + word + " requires manual verification on " + service + " (" + str(response.status_code) + ")")
     elif response.status_code == 404:
         available(word, service, link)
     else:
@@ -169,14 +177,6 @@ def parse_page(words):
             match3 = soup.find('div', attrs={'class': 'grouppage_header'})
 
             matches = [match1, match2, match3]
-        elif int(SITE) == 8:
-            # Available
-            match1 = soup.body.findAll(text='Sorry. Unless you\’ve got a time machine, that content is unavailable.')
-            # Taken
-            match2 = soup.find('div', attrs={'id': 'player'})
-            match3 = soup.body.findAll(text='The community has closed this channel due to terms of service violations.')
-
-            matches = [match1, match2, match3]
         else:
             print("Wrong site!")
         log_result(r, words[w], link, matches=matches)
@@ -196,7 +196,7 @@ def main():
     words = fx.read().split('\n')
     fx.close()
 
-    if (int(SITE) == 5) or (int(SITE) == 6) or (int(SITE) == 8): # Steam and Twitch
+    if (int(SITE) == 5) or (int(SITE) == 6): # Steam
         parse_page(words)
     elif int(SITE) == 4: # Instagram
         send_post(words)
@@ -217,7 +217,7 @@ if len(sys.argv) != 6:
     elif ans == "N":
         confirm = input("Continue executing script? (y|N)")
         if confirm == "y":
-            print("_________________________________\n| SERVICE     |  VALUE TO ENTER |\n_________________________________\n| CUSTOM      |       1         |\n| MINECRAFT   |       2         |\n| TWITTER     |       3         |\n| INSTAGRAM   |       4         |\n| STEAM ID    |       5         |\n| STEAM GROUP |       6         |\n| SOUNDCLOUD  |       7         |\n| MIXER       |       9         |\n| GITHUB      |       10        |\n| ABOUT.ME    |       11        |\n_________________________________\nQuit? (y/N)\n")
+            print("_________________________________\n| SERVICE     |  VALUE TO ENTER |\n_________________________________\n| CUSTOM      |       1         |\n| MINECRAFT   |       2         |\n| TWITTER     |       3         |\n| INSTAGRAM   |       4         |\n| STEAM ID    |       5         |\n| STEAM GROUP |       6         |\n| SOUNDCLOUD  |       7         |\n| TWITCH      |       8         |\n| MIXER       |       9         |\n| GITHUB      |       10        |\n| ABOUT.ME    |       11        |\n| YOUTUBE     |       12        |\n_________________________________\nQuit? (y/N)\n")
             SITE = input("Enter the number from the table above with the site you want to check...")
             
             if SITE.isdigit():
