@@ -26,7 +26,10 @@ config.read('config.ini')
 
 SITE = config['site']['siteNum']
 URL = config['site']['customSite']
-PROXY = config['lists']['proxyList']
+PROXY = config['proxy']['enableProxy']
+PROTOCOL = config['proxy']['proxyProtocol']
+PROXYLIST = config['proxy']['proxyList']
+
 
 # Site URLs
 URLS = {
@@ -44,6 +47,9 @@ URLS = {
     12:"https://youtube.com/%word%"
 }
 
+# Proxy List
+proxyDict = {}
+
 def generate_pw(size=16, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase):
     return ''.join(random.choice(chars) for _ in range(size))
 
@@ -54,6 +60,20 @@ def replace(word):
         return x
     else:
         print("instagram")
+
+def get_proxy():
+    if PROXY and (PROXYLIST != []):
+        fx = open(PROXYLIST, 'r')
+        proxies = fx.read().split('\n')
+        fx.close()
+
+        i = random.randrange(0, proxies.__len__())
+        return str(proxies[i])
+    else:
+        if not PROXY:
+            print("Proxy support is disabled. Please enable it in the config.")
+        elif PROXYLIST == []:
+            print("No proxies available to use.")
 
 def taken(word, service, error=None):
     if error != None:
@@ -67,6 +87,9 @@ def available(word, service, link):
     fx.write(link + "\n")
     fx.close()
 
+def manual(response, word, service):
+    print("The username " + word + " requires manual verification on " + service + " (" + str(response.status_code) + ")")
+
 def log_result(response, word, link, matches=None):
     service = re.search(DOMAIN, link).group(1)
     if matches != None:
@@ -77,7 +100,7 @@ def log_result(response, word, link, matches=None):
         elif matches[2]:
             taken(word, service)
         else:
-            print("The username " + word + " requires manual verification on " + service + " (" + str(response.status_code) + ")")
+            manual(response, word, service)
         
     elif response.status_code == 200:
         if int(SITE) == 3: # Twitter
@@ -116,14 +139,19 @@ def log_result(response, word, link, matches=None):
         elif int(SITE) == 8:
             available(word, service, link)
         else:
-            print("The username " + word + " requires manual verification on " + service + " (" + str(response.status_code) + ")")
+            manual(response, word, service)
     elif response.status_code == 404:
         available(word, service, link)
     else:
-        print("The username " + word + " requires manual verification on " + service + " (" + str(response.status_code) + ")")
+        manual(response, word, service)
 
 def get_cookie():
-    r = requests.get(URLS[int(SITE)])
+    r = None
+    if PROXY:
+        proxyDict[PROTOCOL] = get_proxy()
+        r = requests.get(URLS[int(SITE)], proxies=proxyDict)
+    else:
+        r = requests.get(URLS[int(SITE)])
     return r.cookies
 
 def ready_payload(word):
@@ -151,13 +179,21 @@ def prepare_headers(cookie):
 def send_get(words):
     for w in range(words.__len__()):
         link = replace(words[w])
-        r = requests.get(link)
+        if PROXY:
+            proxyDict[PROTOCOL] = get_proxy()
+            r = requests.get(link, proxies=proxyDict)
+        else:
+            r = requests.get(link)
         log_result(r, words[w], link)
 
 def parse_page(words):
     for w in range(words.__len__()):
         link = replace(words[w])
-        r = requests.get(link)
+        if PROXY:
+            proxyDict[PROTOCOL] = get_proxy()
+            r = requests.get(link, proxies=proxyDict)
+        else:
+            r = requests.get(link)
         page = r.content
         soup = BeautifulSoup(page, "html.parser")
         matches = []
@@ -185,9 +221,14 @@ def send_post(words):
     cookie = get_cookie()
     header = prepare_headers(cookie)
     link = URLS[int(SITE)]
+    r = None
     for w in range(words.__len__()):
         payload = ready_payload(words[w])
-        r = requests.post(URLS[int(SITE)], json=payload, headers=header, cookies=cookie)
+        if PROXY:
+            proxyDict[PROTOCOL] = get_proxy()
+            r = requests.post(URLS[int(SITE)], json=payload, headers=header, cookies=cookie, proxies=proxyDict)
+        else:
+            r = requests.post(URLS[int(SITE)], json=payload, headers=header, cookies=cookie)
         log_result(r, words[w], link)
 
 def main():
@@ -217,7 +258,7 @@ if len(sys.argv) != 6:
     elif ans == "N":
         confirm = input("Continue executing script? (y|N)")
         if confirm == "y":
-            print("_________________________________\n| SERVICE     |  VALUE TO ENTER |\n_________________________________\n| CUSTOM      |       1         |\n| MINECRAFT   |       2         |\n| TWITTER     |       3         |\n| INSTAGRAM   |       4         |\n| STEAM ID    |       5         |\n| STEAM GROUP |       6         |\n| SOUNDCLOUD  |       7         |\n| TWITCH      |       8         |\n| MIXER       |       9         |\n| GITHUB      |       10        |\n| ABOUT.ME    |       11        |\n| YOUTUBE     |       12        |\n_________________________________\nQuit? (y/N)\n")
+            print("_________________________________\n| SERVICE     |  VALUE TO ENTER |\n_________________________________\n| CUSTOM      |       1         |\n| TWITTER     |       3         |\n| INSTAGRAM   |       4         |\n| STEAM ID    |       5         |\n| STEAM GROUP |       6         |\n| SOUNDCLOUD  |       7         |\n| TWITCH      |       8         |\n| MIXER       |       9         |\n| GITHUB      |       10        |\n| ABOUT.ME    |       11        |\n| YOUTUBE     |       12        |\n_________________________________\nQuit? (y/N)\n")
             SITE = input("Enter the number from the table above with the site you want to check...")
             
             if SITE.isdigit():
