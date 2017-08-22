@@ -146,12 +146,7 @@ def log_result(response, word, link, matches=None):
         manual(response, word, service)
 
 def get_cookie():
-    r = None
-    if PROXY:
-        proxyDict[PROTOCOL] = get_proxy()
-        r = requests.get(URLS[int(SITE)], proxies=proxyDict)
-    else:
-        r = requests.get(URLS[int(SITE)])
+    r = requests.get(URLS[int(SITE)])
     return r.cookies
 
 def ready_payload(word):
@@ -221,14 +216,9 @@ def send_post(words):
     cookie = get_cookie()
     header = prepare_headers(cookie)
     link = URLS[int(SITE)]
-    r = None
     for w in range(words.__len__()):
         payload = ready_payload(words[w])
-        if PROXY:
-            proxyDict[PROTOCOL] = get_proxy()
-            r = requests.post(URLS[int(SITE)], json=payload, headers=header, cookies=cookie, proxies=proxyDict)
-        else:
-            r = requests.post(URLS[int(SITE)], json=payload, headers=header, cookies=cookie)
+        r = requests.post(URLS[int(SITE)], json=payload, headers=header, cookies=cookie)
         log_result(r, words[w], link)
 
 def main():

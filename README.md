@@ -1,18 +1,15 @@
-# Multi-Site Username Availability Checker
+# OGCheckr CLI
 
 ### About
 This is a script I made a while back to check the availability of OG words as handles on the various social media platforms. For the most part, it works with any site that has web-based profile pages.
 
 ### TODO
-- Proxy support
-- Multi-threading support
-- Windows and Mac executable binary
-- Full GUI Application
+- Add proxy support for Instagram checking
 
 ### Known Supported Services
-- Minecraft
-- Twitter (IMPROVED in 1.4, strict rate limit)
-- Instagram (IMPROVED in 1.4, strict rate limit)
+- ~~Minecraft~~ - For your Minecraft checking needs, check out [this](http://www.mc-market.org/resources/4480/) awesome checker instead!
+- Twitter
+- Instagram (no proxy support)
 - Steam ID URLs
 - Steam Group URLs
 - Mixer (formerly Beam.pro)
@@ -27,7 +24,7 @@ This is a script I made a while back to check the availability of OG words as ha
 - Kik
 
 ### Comptability
-Version `1.4` is only compatible with Python 3+
+Version `1.4+` is only compatible with Python 3+
 Verion `1.0-1.3` is compatible with Python 2 & 3
 
 ### Installation
