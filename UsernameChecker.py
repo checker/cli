@@ -1,7 +1,6 @@
 # Python Standard Modules
 import sys
 import os
-import json
 import re
 import string
 import random
@@ -16,9 +15,8 @@ WORD_LIST = "word_lists/WORD-LIST-1"
 OUTPUT = "AVAILABLE.txt"
 
 # Regex Patterns
-PLACEHOLDER = r"(%word%)"
 URLPATT = r"(^https?:\/\/[-.a-zA-Z0-9]+)"
-DOMAIN = r"\Ahttps?:\/\/([-a-zA-Z0-9]+)\.[a-zA-Z]+"
+DOMAIN = r"https?:\/\/(\w*)(?(1)\.|(?(1)\w*))"
 
 # Reads configuration file
 config = configparser.ConfigParser()
@@ -34,21 +32,23 @@ PROXYLIST = config['proxy']['proxyList']
 # Site URLs
 URLS = {
     1:URL,
-    2:"https://api.mojang.com/users/profiles/minecraft/%word%",
-    3:"https://api.twitter.com/i/users/username_available.json?username=%word%",
+    2:"https://api.mojang.com/users/profiles/minecraft/%s",
+    3:"https://api.twitter.com/i/users/username_available.json?username=%s",
     4:"https://instagram.com/accounts/web_create_ajax/attempt/",
-    5:"https://steamcommunity.com/id/%word%",
-    6:"https://steamcommunity.com/groups/%word%",
-    7:"https://soundcloud.com/%word%",
-    8:"https://passport.twitch.tv/usernames/%word%",
-    9:"https://mixer.com/api/v1/channels/%word%",
-    10:"https://github.com/%word%",
-    11:"https://about.me/%word%",
-    12:"https://youtube.com/%word%"
+    5:"https://steamcommunity.com/id/%s",
+    6:"https://steamcommunity.com/groups/%s",
+    7:"https://soundcloud.com/%s",
+    8:"https://passport.twitch.tv/usernames/%s",
+    9:"https://mixer.com/api/v1/channels/%s",
+    10:"https://github.com/%s",
+    11:"https://about.me/%s",
+    12:"https://youtube.com/%s"
 }
 
 # Proxy List
 proxyDict = {}
+
+s = requests.Session()
 
 def generate_pw(size=16, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -56,8 +56,7 @@ def generate_pw(size=16, chars=string.ascii_uppercase + string.digits + string.a
 def replace(word):
     # Finds and replaces matches of the name variable with the actual word to insert in URL
     if int(SITE) != 4: # if not Instagram
-        x = re.sub(PLACEHOLDER, word, URLS[int(SITE)])
-        return x
+        return URLS[int(SITE)] % word
     else:
         print("instagram")
 
@@ -146,7 +145,7 @@ def log_result(response, word, link, matches=None):
         manual(response, word, service)
 
 def get_cookie():
-    r = requests.get(URLS[int(SITE)])
+    r = s.get(URLS[int(SITE)])
     return r.cookies
 
 def ready_payload(word):
@@ -155,7 +154,7 @@ def ready_payload(word):
             "email":"no-reply@crocbuzzstudios.com",
             "username": word,
             "password": generate_pw(),
-            "first_name": "Croc"
+            "first_name": word
         }
     else:
         print("Wrong site!")
@@ -176,9 +175,9 @@ def send_get(words):
         link = replace(words[w])
         if PROXY:
             proxyDict[PROTOCOL] = get_proxy()
-            r = requests.get(link, proxies=proxyDict)
+            r = s.get(link, proxies=proxyDict)
         else:
-            r = requests.get(link)
+            r = s.get(link)
         log_result(r, words[w], link)
 
 def parse_page(words):
@@ -186,9 +185,9 @@ def parse_page(words):
         link = replace(words[w])
         if PROXY:
             proxyDict[PROTOCOL] = get_proxy()
-            r = requests.get(link, proxies=proxyDict)
+            r = s.get(link, proxies=proxyDict)
         else:
-            r = requests.get(link)
+            r = s.get(link)
         page = r.content
         soup = BeautifulSoup(page, "html.parser")
         matches = []
@@ -218,7 +217,13 @@ def send_post(words):
     link = URLS[int(SITE)]
     for w in range(words.__len__()):
         payload = ready_payload(words[w])
-        r = requests.post(URLS[int(SITE)], json=payload, headers=header, cookies=cookie)
+        r = None
+        if PROXY:
+            proxyDict[PROTOCOL] = get_proxy()
+            r = s.post(URLS[int(SITE)], data=payload, headers=header, cookies=cookie, proxies=proxyDict)
+        else:
+            r = s.post(URLS[int(SITE)], data=payload, headers=header, cookies=cookie)
+        
         log_result(r, words[w], link)
 
 def main():
