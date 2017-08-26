@@ -10,11 +10,15 @@ import requests
 from termcolor import colored
 from bs4 import BeautifulSoup
 
+# Globals
+WORD = ""
+
 # CLI Arguments
 WORD_LIST = "word_lists/WORD-LIST-1"
 OUTPUT = "AVAILABLE.txt"
 
 # Regex Patterns
+PLACEHOLDER = r"%word%"
 URLPATT = r"(^https?:\/\/[-.a-zA-Z0-9]+)"
 DOMAIN = r"https?:\/\/(\w*)(?(1)\.|(?(1)\w*))"
 
@@ -55,24 +59,43 @@ def generate_pw(size=16, chars=string.ascii_uppercase + string.digits + string.a
 
 def replace(word):
     # Finds and replaces matches of the name variable with the actual word to insert in URL
-    if int(SITE) != 4: # if not Instagram
+    if int(SITE) == 1:
+        x = re.sub(PLACEHOLDER, word, URLS[1])
+        print(x)
+        return x
+    elif int(SITE) != 4: # if not Instagram
         return URLS[int(SITE)] % word
     else:
         print("instagram")
 
-def get_proxy():
-    if PROXY and (PROXYLIST != []):
+def get_proxy_list():
+    if PROXY and (PROXYLIST != None):
         fx = open(PROXYLIST, 'r')
         proxies = fx.read().split('\n')
         fx.close()
 
-        i = random.randrange(0, proxies.__len__())
-        return str(proxies[i])
+        return proxies
     else:
         if not PROXY:
             print("Proxy support is disabled. Please enable it in the config.")
         elif PROXYLIST == []:
             print("No proxies available to use.")
+
+def select_random_proxy(plist):
+    i = random.randrange(0, plist.__len__())
+    proxyDict[PROTOCOL] = "http://" + str(plist[i])
+
+def check_proxy():
+    try:
+        requests.get(
+            "https://google.com",
+            proxies=proxyDict
+        )
+    except IOError:
+        print("Proxy failed, trying another...")
+        return False
+    else:
+        return True
 
 def taken(word, service, error=None):
     if error != None:
@@ -172,20 +195,34 @@ def prepare_headers(cookie):
 
 def send_get(words):
     for w in range(words.__len__()):
-        link = replace(words[w])
+        WORD = words[w]
+        link = replace(WORD)
         if PROXY:
-            proxyDict[PROTOCOL] = get_proxy()
-            r = s.get(link, proxies=proxyDict)
+            pl = get_proxy_list()
+            select_random_proxy(pl)
+            if check_proxy():
+                r = s.get(link, proxies=proxyDict)
+            else:
+                pl = get_proxy_list()
+                select_random_proxy(pl)
+                r = s.get(link, proxies=proxyDict)
         else:
             r = s.get(link)
-        log_result(r, words[w], link)
+        log_result(r, WORD, link)
 
 def parse_page(words):
     for w in range(words.__len__()):
-        link = replace(words[w])
+        WORD = words[w]
+        link = replace(WORD)
         if PROXY:
-            proxyDict[PROTOCOL] = get_proxy()
-            r = s.get(link, proxies=proxyDict)
+            pl = get_proxy_list()
+            select_random_proxy(pl)
+            if check_proxy():
+                r = s.get(link, proxies=proxyDict)
+            else:
+                pl = get_proxy_list()
+                select_random_proxy(pl)
+                r = s.get(link, proxies=proxyDict)
         else:
             r = s.get(link)
         page = r.content
@@ -209,22 +246,29 @@ def parse_page(words):
             matches = [match1, match2, match3]
         else:
             print("Wrong site!")
-        log_result(r, words[w], link, matches=matches)
+        log_result(r, WORD, link, matches=matches)
 
 def send_post(words):
     cookie = get_cookie()
     header = prepare_headers(cookie)
     link = URLS[int(SITE)]
     for w in range(words.__len__()):
-        payload = ready_payload(words[w])
+        WORD = words[w]
+        payload = ready_payload(WORD)
         r = None
         if PROXY:
-            proxyDict[PROTOCOL] = get_proxy()
-            r = s.post(URLS[int(SITE)], data=payload, headers=header, cookies=cookie, proxies=proxyDict)
+            pl = get_proxy_list()
+            select_random_proxy(pl)
+            if check_proxy():
+                r = s.post(link, data=payload, headers=header, cookies=cookie, proxies=proxyDict)
+            else:
+                pl = get_proxy_list()
+                select_random_proxy(pl)
+                r = s.post(link, data=payload, headers=header, cookies=cookie, proxies=proxyDict)
         else:
             r = s.post(URLS[int(SITE)], data=payload, headers=header, cookies=cookie)
         
-        log_result(r, words[w], link)
+        log_result(r, WORD, link)
 
 def main():
     # Reads word list from file and adds each name to array words[]
