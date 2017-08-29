@@ -6,17 +6,17 @@ This is a script I made a while back to check the availability of OG words as ha
 ### Known Supported Services
 - ~~Minecraft~~ - For your Minecraft checking needs, check out [this](http://www.mc-market.org/resources/4480/) awesome checker instead!
 - Twitter
-- Instagram
 - Steam ID URLs
 - Steam Group URLs
 - Mixer (formerly Beam.pro)
-- Twitch.tv Passport
+- Twitch.tv
 - Soundcloud
 - Github
 - About.me
 - YouTube (/{username} url format)
 
 ### Known Unsupported Services
+- Instagram
 - Snapchat
 - Kik
 

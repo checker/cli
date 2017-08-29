@@ -20,7 +20,7 @@ OUTPUT = "AVAILABLE.txt"
 # Regex Patterns
 PLACEHOLDER = r"%word%"
 URLPATT = r"(^https?:\/\/[-.a-zA-Z0-9]+)"
-DOMAIN = r"https?:\/\/(\w*)(?(1)\.|(?(1)\w*))"
+DOMAIN = r"(?:https:\/\/)?(?:\w+\.)?(\w+)\.\w+\/?"
 
 # Reads configuration file
 config = configparser.ConfigParser()
@@ -38,7 +38,7 @@ URLS = {
     1:URL,
     2:"https://api.mojang.com/users/profiles/minecraft/%s",
     3:"https://api.twitter.com/i/users/username_available.json?username=%s",
-    4:"https://instagram.com/accounts/web_create_ajax/attempt/",
+    4:"http://www.instagramavailability.com/_validate_username?username=%s",
     5:"https://steamcommunity.com/id/%s",
     6:"https://steamcommunity.com/groups/%s",
     7:"https://soundcloud.com/%s",
@@ -63,10 +63,8 @@ def replace(word):
         x = re.sub(PLACEHOLDER, word, URLS[1])
         print(x)
         return x
-    elif int(SITE) != 4: # if not Instagram
-        return URLS[int(SITE)] % word
     else:
-        print("instagram")
+        return URLS[int(SITE)] % word
 
 def get_proxy_list():
     if PROXY and (PROXYLIST != None):
@@ -134,11 +132,10 @@ def log_result(response, word, link, matches=None):
                 taken(word, service, error=err)
         elif int(SITE) == 4: # Instagram
             obj = response.json()
-            if obj['dryrun_passed'] == True:
+            if obj['valid']:
                 available(word, service, link)
             else:
-                err = obj['errors']['username'][0]['code']
-                taken(word, service, error=err)
+                taken(word, service)
         elif int(SITE) == 2: #Minecraft
             obj = response.json()
             if 'name' in obj:
@@ -278,8 +275,6 @@ def main():
 
     if (int(SITE) == 5) or (int(SITE) == 6): # Steam
         parse_page(words)
-    elif int(SITE) == 4: # Instagram
-        send_post(words)
     else:
         send_get(words)
 
@@ -297,7 +292,7 @@ if len(sys.argv) != 6:
     elif ans == "N":
         confirm = input("Continue executing script? (y|N)")
         if confirm == "y":
-            print("_________________________________\n| SERVICE     |  VALUE TO ENTER |\n_________________________________\n| CUSTOM      |       1         |\n| TWITTER     |       3         |\n| INSTAGRAM   |       4         |\n| STEAM ID    |       5         |\n| STEAM GROUP |       6         |\n| SOUNDCLOUD  |       7         |\n| TWITCH      |       8         |\n| MIXER       |       9         |\n| GITHUB      |       10        |\n| ABOUT.ME    |       11        |\n| YOUTUBE     |       12        |\n_________________________________\nQuit? (y/N)\n")
+            print("_________________________________\n| SERVICE     |  VALUE TO ENTER |\n_________________________________\n| CUSTOM      |       1         |\n| TWITTER     |       3         |\n| STEAM ID    |       5         |\n| STEAM GROUP |       6         |\n| SOUNDCLOUD  |       7         |\n| TWITCH      |       8         |\n| MIXER       |       9         |\n| GITHUB      |       10        |\n| ABOUT.ME    |       11        |\n| YOUTUBE     |       12        |\n_________________________________\nQuit? (y/N)\n")
             SITE = input("Enter the number from the table above with the site you want to check...")
             
             if SITE.isdigit():

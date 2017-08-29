@@ -3,3 +3,5 @@ archive/
 username-checker.iml
 .idea
 word_lists/TEST-LIST
+word_lists/words.txt
+word_lists/1-1000.txt
