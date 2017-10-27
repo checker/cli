@@ -1,8 +1,5 @@
 import configparser
 
-# Globals
-WORD = ""
-
 # Regex Patterns
 PLACEHOLDER = r"%word%"
 URLPATT = r"(^https?:\/\/[-.a-zA-Z0-9]+)"

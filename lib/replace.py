@@ -5,7 +5,7 @@ from lib.configure import getSite as SITE
 
 # Site URLs
 URLS = {
-    1:URL,
+    1:URL(),
     2:"https://api.mojang.com/users/profiles/minecraft/%s",
     3:"https://api.twitter.com/i/users/username_available.json?username=%s",
     4:"http://www.instagramavailability.com/_validate_username?username=%s",
