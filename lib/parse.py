@@ -77,4 +77,4 @@ for item in range(words.__len__()):
 q.join()
 
 total = str(time.time()-start)
-print("\n\nEntire job took: %s seconds" % total)
+print("\nChecked %s words in %s seconds." % (words.__len__(), total))
