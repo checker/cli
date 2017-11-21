@@ -1,10 +1,11 @@
-import random
 import requests
 from lib.configure import getProxyList as PROXYLIST
 from lib.configure import enableProxy as PROXY
-from lib.configure import getProtocol as PROTOCOL
 
-proxyDict = {}
+ps = requests.Session()
+
+good_proxies = []
+bad_proxies = []
 
 def get_proxy_list():
     if PROXY() and (PROXYLIST() != None):
@@ -19,18 +20,23 @@ def get_proxy_list():
         elif PROXYLIST() == []:
             print("No proxies available to use.")
 
-def select_random_proxy(plist):
-    i = random.randrange(0, plist.__len__())
-    proxyDict[PROTOCOL()] = "http://" + str(plist[i])
+def set_proxy(session, proxy):
+    if proxy != 'none':
+        session.proxies.update({
+            'http:' : 'http://' + proxy,
+            'https:' : 'https://' + proxy
+        })
+    return session
 
-def check_proxy():
+def check_proxy(proxy):
     try:
-        requests.get(
-            "https://google.com",
-            proxies=proxyDict
-        )
-    except IOError:
-        print("Proxy failed, trying another...")
+        session = set_proxy(ps, proxy)
+        r = session.get('https://google.com', timeout=4)
+        if r.status_code is 200:
+            good_proxies.append(proxy)
+            return True
+        else:
+            raise "Not Google"
+    except r.raise_for_status():
+        bad_proxies.append(proxy)
         return False
-    else:
-        return True

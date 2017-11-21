@@ -1,12 +1,18 @@
 import requests
-from lib.configure import getSite as SITE
-from lib.configure import WORD
-from lib.configure import enableProxy as PROXY
+import random
+import threading
+from queue import Queue
+import time
 from lib.proxy import *
-from lib.cookie import *
-from lib.headers import *
-from lib.payload import *
+from lib.log import *
 from lib.replace import *
+from lib.cookie import *
+from lib.payload import ready_payload
+from lib.headers import prepare_headers
+from lib.configure import enableProxy as PROXY
+from lib.configure import getSite as SITE
+from lib.configure import numThreads as THREADS
+from lib.configure import getWordList as WORD_LIST
 
 s = requests.Session()
 print_lock = threading.Lock()
@@ -23,18 +29,13 @@ link = URLS[SITE()]
 def postJob(item):
     word = words[item]
     payload = ready_payload(word)
-    r = None
     if PROXY():
-        pl = get_proxy_list()
-        select_random_proxy(pl)
-        if check_proxy():
-            r = s.post(link, data=payload, headers=header, cookies=cookie, proxies=proxyDict)
-        else:
-            pl = get_proxy_list()
-            select_random_proxy(pl)
-            r = s.post(link, data=payload, headers=header, cookies=cookie, proxies=proxyDict)
+        plist = get_proxy_list()
+        i = random.randrange(0, plist.__len__())
+        sess = set_proxy(s, plist[i])
+        r = sess.post(link, data=payload, headers=header, cookies=cookie)
     else:
-        r = s.post(URLS[SITE()], data=payload, headers=header, cookies=cookie)
+        r = s.post(link, data=payload, headers=header, cookies=cookie)
     with print_lock:
         log_result(r, word, link)
 

@@ -1,11 +1,12 @@
 from bs4 import BeautifulSoup
 import requests
+import random
 import threading
 from queue import Queue
 import time
 from lib.proxy import *
 from lib.log import *
-from lib.replace import replace
+from lib.replace import *
 from lib.configure import enableProxy as PROXY
 from lib.proxy import *
 from lib.configure import getSite as SITE
@@ -24,14 +25,10 @@ def parseJob(item):
     word = words[item]
     link = replace(word)
     if PROXY:
-        pl = get_proxy_list()
-        select_random_proxy(pl)
-        if check_proxy():
-            r = s.get(link, proxies=proxyDict)
-        else:
-            pl = get_proxy_list()
-            select_random_proxy(pl)
-            r = s.get(link, proxies=proxyDict)
+        plist = get_proxy_list()
+        i = random.randrange(0, plist.__len__())
+        sess = set_proxy(s, plist[i])
+        r = sess.get(link)
     else:
         r = s.get(link)
     page = r.content

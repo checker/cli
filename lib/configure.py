@@ -18,7 +18,6 @@ def getSite():
     else:
         return int(x)
 
-
 def getCustomUrl():
     x = config['site']['customSite']
     if x == "":
@@ -26,7 +25,6 @@ def getCustomUrl():
         exit()
     else:
         return str(x)
-
 
 def enableProxy():
     x = config['proxy']['enableProxy']
@@ -36,16 +34,6 @@ def enableProxy():
     else:
         return str(x)
 
-
-def getProtocol():
-    x = config['proxy']['proxyProtocol']
-    if x == "":
-        print("Either http or https must be specified for proxyProtocol in the config file.")
-        exit()
-    else:
-        return str(x)
-
-
 def getProxyList():
     x = "proxy_lists/" + config['proxy']['proxyList']
     if x == "":
@@ -54,6 +42,11 @@ def getProxyList():
     else:
         return str(x)
 
+def getGoodProxyList():
+    return "proxy_lists/good_proxies.txt"
+
+def getBadProxyList():
+    return "proxy_lists/bad_proxies.txt"
 
 def getWordList():
     x = "word_lists/" + config['lists']['wordList']

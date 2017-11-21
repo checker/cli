@@ -25,7 +25,7 @@ def log_result(response, word, link, matches=None):
                 taken(word, service, error=err)
         elif SITE() == 4: # Instagram
             obj = response.json()
-            if obj['valid']:
+            if obj['dryrun_passed']:
                 available(word, service, link)
             else:
                 taken(word, service)

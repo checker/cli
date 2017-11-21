@@ -1,4 +1,5 @@
 import requests
+from lib.replace import *
 from lib.configure import getSite as SITE
 
 s = requests.Session()

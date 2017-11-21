@@ -7,3 +7,15 @@
 
 # Keeping my personal OG findings private hehe ;)
 AVAILABLE.txt
+
+# No, you can't have my proxies...
+proxy_lists/proxies.txt
+proxy_lists/good_proxies.txt
+proxy_lists/bad_proxies.txt
+
+# Feature not ready for release
+run_script_mac.command
+run_script_mac.sh
+
+# Cache files
+lib/__pycache__
