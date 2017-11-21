@@ -14,7 +14,6 @@ from lib.configure import getSite as SITE
 from lib.configure import numThreads as THREADS
 from lib.configure import getWordList as WORD_LIST
 
-s = requests.Session()
 print_lock = threading.Lock()
 
 # Reads word list from file and adds each name to array words[]
@@ -29,6 +28,7 @@ link = URLS[SITE()]
 def postJob(item):
     word = words[item]
     payload = ready_payload(word)
+    s = requests.Session()
     if PROXY():
         plist = get_proxy_list()
         i = random.randrange(0, plist.__len__())

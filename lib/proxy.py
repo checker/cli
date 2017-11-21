@@ -35,6 +35,8 @@ def check_proxy(proxy):
         if r.status_code is 200:
             good_proxies.append(proxy)
             return True
+        else:
+            raise requests.RequestException
     except r.raise_for_status():
         bad_proxies.append(proxy)
         return False

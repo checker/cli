@@ -12,7 +12,6 @@ from lib.configure import numThreads as THREADS
 from lib.configure import getWordList as WORD_LIST
 
 print_lock = threading.Lock()
-s = requests.Session()
 
 # Reads word list from file and adds each name to array words[]
 fx = open(WORD_LIST(), 'r')
@@ -22,6 +21,7 @@ fx.close()
 def requestJob(item):
     word = words[item]
     link = replace(word)
+    s = requests.Session()
     if PROXY():
         plist = get_proxy_list()
         i = random.randrange(0, plist.__len__())
