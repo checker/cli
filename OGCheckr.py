@@ -13,7 +13,6 @@ from lib.configure import getProxyList as PROXYLIST
 from lib.configure import getBadProxyList as BADPROXYLIST
 
 print_lock = threading.Lock()
-file_lock = threading.Lock()
 plist = get_proxy_list()
 numProxies = len(plist)
 q = Queue()
@@ -22,9 +21,6 @@ def requestJob(proxy):
     if check_proxy(proxy):
         with print_lock:
             print("%s is working" % proxy)
-    else:
-        with print_lock:
-            print("%s is bad" % proxy)
 
 def threader():
     while True:
