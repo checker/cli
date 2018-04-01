@@ -3,13 +3,14 @@ import random
 import threading
 from queue import Queue
 import time
-from lib.proxy import *
-from lib.log import *
-from lib.replace import *
-from lib.cookie import *
+from lib.ProxyHelper import ProxyHelper
+from lib.log import log_result
+from lib.replace import URLS
+from lib.cookie import get_cookie
 from lib.payload import ready_payload
 from lib.headers import prepare_headers
 from lib.configure import enableProxy as PROXY
+from lib.configure import getProxyList as PROXYLIST
 from lib.configure import getSite as SITE
 from lib.configure import numThreads as THREADS
 from lib.configure import getWordList as WORD_LIST
@@ -29,10 +30,10 @@ def postJob(item):
     word = words[item]
     payload = ready_payload(word)
     s = requests.Session()
-    if PROXY():
-        plist = get_proxy_list()
+    if PROXY() == "True":
+        plist = PROXYLIST()
         i = random.randrange(0, plist.__len__())
-        sess = set_proxy(s, plist[i])
+        sess = ProxyHelper().setProxy(s, plist[i])
         r = sess.post(link, data=payload, headers=header, cookies=cookie)
     else:
         r = s.post(link, data=payload, headers=header, cookies=cookie)
@@ -48,10 +49,12 @@ def threader():
 start = time.time()
 
 q = Queue()
+print("Starting up threads...")
 for x in range(THREADS()):
     t = threading.Thread(target = threader)
     t.daemon = True
     t.start()
+    print("[Thread-%d] has started." % x)
 
 for item in range(words.__len__()):
     q.put(item)

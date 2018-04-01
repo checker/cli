@@ -8,7 +8,7 @@ URLS = {
     1:URL(),
     2:"https://api.mojang.com/users/profiles/minecraft/%s",
     3:"https://api.twitter.com/i/users/username_available.json?username=%s",
-    4:"https://www.instagram.com/accounts/web_create_ajax/attempt/",
+    4:"https://instagram.com/accounts/web_create_ajax/attempt/",
     5:"https://steamcommunity.com/id/%s",
     6:"https://steamcommunity.com/groups/%s",
     7:"https://soundcloud.com/%s",
@@ -17,7 +17,8 @@ URLS = {
     10:"https://github.com/%s",
     11:"https://about.me/%s",
     12:"https://youtube.com/c/%s",
-    13:"http://pastebin.com/u/%s"
+    13:"http://pastebin.com/u/%s",
+    14:"https://giphy.com/channel/%s"
 }
 
 
