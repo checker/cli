@@ -4,11 +4,11 @@ import random
 import threading
 from queue import Queue
 import time
-from lib.proxy import *
-from lib.log import *
-from lib.replace import *
+from lib.ProxyHelper import ProxyHelper
+from lib.log import log_result
+from lib.replace import replace
 from lib.configure import enableProxy as PROXY
-from lib.proxy import *
+from lib.configure import getProxyList as PROXYLIST
 from lib.configure import getSite as SITE
 from lib.configure import numThreads as THREADS
 from lib.configure import getWordList as WORD_LIST
@@ -24,10 +24,10 @@ def parseJob(item):
     word = words[item]
     link = replace(word)
     s = requests.Session()
-    if PROXY:
-        plist = get_proxy_list()
+    if PROXY() == "True":
+        plist = PROXYLIST()
         i = random.randrange(0, plist.__len__())
-        sess = set_proxy(s, plist[i])
+        sess = ProxyHelper().setProxy(s, plist[i])
         r = sess.get(link)
     else:
         r = s.get(link)

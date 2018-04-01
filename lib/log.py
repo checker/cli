@@ -1,5 +1,5 @@
 import re
-from lib.statuses import *
+from lib.statuses import available, taken, manual
 from lib.configure import getSite as SITE
 from lib.configure import DOMAIN
 
@@ -35,6 +35,8 @@ def log_result(response, word, link, matches=None):
                 taken(word, service)
                 if 'errorMessage' in obj:
                     print(obj['errorMessage'])
+            else:
+                available(word, service, None)
         elif SITE() == 9: # Mixer
             obj = response.json()
             if 'statusCode' in obj:

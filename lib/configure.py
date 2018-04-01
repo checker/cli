@@ -32,21 +32,34 @@ def enableProxy():
         print("Either True or False must be specified for enableProxy in the config file.")
         exit()
     else:
-        return str(x)
+        return x
 
-def getProxyList():
-    x = "proxy_lists/" + config['proxy']['proxyList']
+def proxyFiltering():
+    x = config['proxy']['proxyFiltering']
     if x == "":
-        print("Place just the filename of the list for proxyList in the config file.\nAll proxy lists go in the proxy_lists directory.")
+        print("Either True or False must be specified for proxyFiltering in the config file.")
         exit()
     else:
-        return str(x)
+        return x
 
-def getGoodProxyList():
-    return "proxy_lists/good_proxies.txt"
-
-def getBadProxyList():
-    return "proxy_lists/bad_proxies.txt"
+def getProxyList():
+    proxies = []
+    path = "proxy_lists/" + config['proxy']['proxyList']
+    if path is not None:
+        fx = open(path, 'r')
+        proxies = fx.read().split('\n')
+        fx.close()
+        return proxies
+    else:
+        if not enableProxy():
+            print("Proxy support is disabled. Please enable it in the config.")
+            exit()
+        elif proxies is None:
+            print("Specified proxy list is empty. Please add some proxies.")
+            exit()
+        else:
+            print("Unkown error.")
+            exit()
 
 def getWordList():
     x = "word_lists/" + config['lists']['wordList']

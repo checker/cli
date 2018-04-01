@@ -2,13 +2,22 @@
         CURRENT RELEASE
 ================================
 
+The Bug Expedition
+v1.8 (April 1, 2018)
+
+- Completely re-wrote the broken proxy integration and filtering system
+- Added the ability to disable proxy filtering. This was the most requested feature and now it's finally here!
+- Added support for SOCKS proxies. No need to do anything special, just put them in your proxy list as any other proxy.
+- Added Giphy channel support
+- Removed and consolidated some of the files in the libs/ directory
+
+================================
+         LAST RELEASE
+================================
+
 The Glorious Update
 v1.7 (November 21, 2017)
 
 - Implemented proxy checker and filtering system
 - Re-implemented Instagram support
 - Added Pastebin user support
-
-================================
-         PAST RELEASES
-================================

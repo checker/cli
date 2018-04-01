@@ -8,14 +8,21 @@
 # Keeping my personal OG findings private hehe ;)
 AVAILABLE.txt
 
+# Get yer own word lists...
+word_lists/OG-LIST2.txt
+word_lists/TEST-LIST
+
 # No, you can't have my proxies...
-proxy_lists/proxies.txt
+proxy_lists/private_proxies.txt
 proxy_lists/good_proxies.txt
 proxy_lists/bad_proxies.txt
 
-# Feature not ready for release
-run_script_mac.command
-run_script_mac.sh
-
 # Cache files
 lib/__pycache__
+
+# Archives
+ogcheckr.tar.gz
+
+# Other files
+setup.py
+scripts/*
