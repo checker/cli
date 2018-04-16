@@ -21,17 +21,29 @@ fx.close()
 
 def requestJob(item):
     word = words[item]
-    link = replace(word)
-    s = requests.Session()
-    if PROXY() == "True":
-        plist = PROXYLIST()
-        i = random.randrange(0, plist.__len__())
-        sess = ProxyHelper().setProxy(s, plist[i])
-        r = sess.get(link)
+
+    if SITE()==3 and not 4<len(word)<16:
+        with print_lock:
+            print("["+threading.current_thread().name+"] "+word+" is UNAVAILABLE on twitter because it has illegal length.")
+    elif SITE()==10 and not len(word)<40:
+        with print_lock:
+            print("["+threading.current_thread().name+"] "+word+" is UNAVAILABLE on github because it has illegal length.")
+    elif SITE()==13 and not 2<len(word)<21:
+        with print_lock:
+            print("["+threading.current_thread().name+"] "+word+" is UNAVAILABLE on pastebin because it has illegal length.")
     else:
-        r = s.get(link)
-    with print_lock:
-        log_result(r, word, link)
+
+        link = replace(word)
+        s = requests.Session()
+        if PROXY() == "True":
+            plist = PROXYLIST()
+            i = random.randrange(0, plist.__len__())
+            sess = ProxyHelper().setProxy(s, plist[i])
+            r = sess.get(link)
+        else:
+            r = s.get(link)
+        with print_lock:
+            log_result(r, word, link)
 
 def threader():
     while True:
