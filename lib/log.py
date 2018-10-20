@@ -1,7 +1,8 @@
 import re
 from lib.statuses import available, taken, manual
-from lib.configure import getSite as SITE
-from lib.configure import DOMAIN
+from lib.ConfigHelper import ConfigHelper, DOMAIN
+
+ch = ConfigHelper()
 
 def log_result(response, word, link, matches=None):
     service = re.search(DOMAIN, link).group(1)
@@ -16,20 +17,20 @@ def log_result(response, word, link, matches=None):
             manual(response, word, service)
         
     elif response.status_code == 200:
-        if SITE() == 3: # Twitter
+        if ch.getSite() == 3: # Twitter
             obj = response.json()
             if obj['valid'] == True:
                 available(word, service, link)
             else:
                 err = obj['msg']
                 taken(word, service, error=err)
-        elif SITE() == 4: # Instagram
+        elif ch.getSite() == 4: # Instagram
             obj = response.json()
             if obj['dryrun_passed']:
                 available(word, service, link)
             else:
                 taken(word, service)
-        elif SITE() == 2: #Minecraft
+        elif ch.getSite() == 2: #Minecraft
             obj = response.json()
             if 'name' in obj:
                 taken(word, service)
@@ -37,20 +38,20 @@ def log_result(response, word, link, matches=None):
                     print(obj['errorMessage'])
             else:
                 available(word, service, None)
-        elif SITE() == 9: # Mixer
+        elif ch.getSite() == 9: # Mixer
             obj = response.json()
             if 'statusCode' in obj:
                 available(word, service, link)
             else:
                 taken(word, service)
-        elif SITE() == 8: # Twitch
+        elif ch.getSite() == 8: # Twitch
             taken(word, service)
         else:
             taken(word, service)
     elif response.status_code == 204:
-        if SITE() == 2:
+        if ch.getSite() == 2:
             available(word, service, link)
-        elif SITE() == 8:
+        elif ch.getSite() == 8:
             available(word, service, link)
         else:
             manual(response, word, service)

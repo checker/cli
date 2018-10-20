@@ -3,37 +3,34 @@ import random
 import threading
 from queue import Queue
 import time
-from lib.ProxyHelper import ProxyHelper
 from lib.log import log_result
 from lib.replace import URLS
 from lib.cookie import get_cookie
 from lib.payload import ready_payload
 from lib.headers import prepare_headers
-from lib.configure import enableProxy as PROXY
-from lib.configure import getProxyList as PROXYLIST
-from lib.configure import getSite as SITE
-from lib.configure import numThreads as THREADS
-from lib.configure import getWordList as WORD_LIST
+
+from lib.ConfigHelper import ConfigHelper
+from lib.ProxyHelper import ProxyHelper
+
+ch = ConfigHelper()
+ph = ProxyHelper()
 
 print_lock = threading.Lock()
 
-# Reads word list from file and adds each name to array words[]
-fx = open(WORD_LIST(), 'r')
-words = fx.read().split('\n')
-fx.close()
+words = ch.getWords()
 
 cookie = get_cookie()
 header = prepare_headers(cookie)
-link = URLS[SITE()]
+link = URLS[ch.getSite()]
 
 def postJob(item):
     word = words[item]
     payload = ready_payload(word)
     s = requests.Session()
-    if PROXY() == "True":
-        plist = PROXYLIST()
+    if ch.enableProxy():
+        plist = ch.getProxies()
         i = random.randrange(0, plist.__len__())
-        sess = ProxyHelper().setProxy(s, plist[i])
+        sess = ph.setProxy(s, plist[i])
         r = sess.post(link, data=payload, headers=header, cookies=cookie)
     else:
         r = s.post(link, data=payload, headers=header, cookies=cookie)
@@ -50,7 +47,7 @@ start = time.time()
 
 q = Queue()
 print("Starting up threads...")
-for x in range(THREADS()):
+for x in range(ch.numThreads()):
     t = threading.Thread(target = threader)
     t.daemon = True
     t.start()

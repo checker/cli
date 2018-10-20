@@ -2,6 +2,19 @@
         CURRENT RELEASE
 ================================
 
+Farewell OGCheckr, Hello Penguin!
+v1.9 (October 20, 2018)
+
+This is the final release of OGCheckr CLI in its current state. My future efforts will be put towards the Penguin API platform and client applications.
+
+- Re-wrote the configuration helper class to recognize non-standard config values such as yes/no instead of true/false. 
+- Configuration values are no longer case sensitive
+- Shortened filename of main script to og.py
+
+================================
+        LAST RELEASE
+================================
+
 The Bug Expedition
 v1.8 (April 1, 2018)
 
@@ -12,7 +25,7 @@ v1.8 (April 1, 2018)
 - Removed and consolidated some of the files in the libs/ directory
 
 ================================
-         LAST RELEASE
+         OLDER RELEASE
 ================================
 
 The Glorious Update

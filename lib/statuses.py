@@ -1,5 +1,7 @@
 import threading
-from lib.configure import getOutputList as OUTPUT
+from lib.ConfigHelper import ConfigHelper
+
+ch = ConfigHelper()
 
 def taken(word, service, error=None):
     if error != None:
@@ -12,7 +14,7 @@ def taken(word, service, error=None):
 def available(word, service, link):
     msg = "[%s] %s is AVAILABLE on %s." % (threading.current_thread().name, word, service)
     print(msg)
-    fx = open(OUTPUT(), 'a')
+    fx = open(ch.getOutputList(), 'a')
     fx.write("%s (%s)\n" % (word, service))
     fx.close()
 

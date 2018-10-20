@@ -1,11 +1,11 @@
 import re
-from lib.configure import PLACEHOLDER
-from lib.configure import getCustomUrl as URL
-from lib.configure import getSite as SITE
+from lib.ConfigHelper import ConfigHelper, PLACEHOLDER
+
+ch = ConfigHelper()
 
 # Site URLs
 URLS = {
-    1:URL(),
+    1:ch.getCustomUrl(),
     2:"https://api.mojang.com/users/profiles/minecraft/%s",
     3:"https://api.twitter.com/i/users/username_available.json?username=%s",
     4:"https://instagram.com/accounts/web_create_ajax/attempt/",
@@ -24,9 +24,9 @@ URLS = {
 
 def replace(word):
     # Finds and replaces matches of the name variable with the actual word to insert in URL
-    if SITE() == 1:
+    if ch.getSite() == 1:
         x = re.sub(PLACEHOLDER, word, URLS[1])
         return x
     else:
-        return URLS[SITE()] % word
+        return URLS[ch.getSite()] % word
     

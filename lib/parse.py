@@ -4,37 +4,33 @@ import random
 import threading
 from queue import Queue
 import time
-from lib.ProxyHelper import ProxyHelper
 from lib.log import log_result
 from lib.replace import replace
-from lib.configure import enableProxy as PROXY
-from lib.configure import getProxyList as PROXYLIST
-from lib.configure import getSite as SITE
-from lib.configure import numThreads as THREADS
-from lib.configure import getWordList as WORD_LIST
+from lib.ConfigHelper import ConfigHelper
+from lib.ProxyHelper import ProxyHelper
+
+ch = ConfigHelper()
+ph = ProxyHelper()
 
 print_lock = threading.Lock()
 
-# Reads word list from file and adds each name to array words[]
-fx = open(WORD_LIST(), 'r')
-words = fx.read().split('\n')
-fx.close()
+words = ch.getWords()
 
 def parseJob(item):
     word = words[item]
     link = replace(word)
     s = requests.Session()
-    if PROXY() == "True":
-        plist = PROXYLIST()
+    if ch.enableProxy():
+        plist = ch.getProxies()
         i = random.randrange(0, plist.__len__())
-        sess = ProxyHelper().setProxy(s, plist[i])
+        sess = ph.setProxy(s, plist[i])
         r = sess.get(link)
     else:
         r = s.get(link)
     page = r.content
     soup = BeautifulSoup(page, "html.parser")
     matches = []
-    if SITE() == 5:
+    if ch.getSite() == 5:
         # Available
         match1 = soup.body.findAll(text='The specified profile could not be found.')
         # Taken
@@ -42,7 +38,7 @@ def parseJob(item):
         match3 = soup.find('div', attrs={'class': 'profile_header'})
         
         matches = [match1, match2, match3]
-    elif SITE() == 6:
+    elif ch.getSite() == 6:
         # Available
         match1 = soup.body.findAll(text='No group could be retrieved for the given URL.')
         # Taken
@@ -66,7 +62,7 @@ def threader():
 start = time.time()
 
 q = Queue()
-for x in range(THREADS()):
+for x in range(ch.numThreads()):
     t = threading.Thread(target = threader)
     t.daemon = True
     t.start()

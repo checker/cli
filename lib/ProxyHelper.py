@@ -3,16 +3,16 @@ import threading
 from queue import Queue
 import time
 import requests
-from lib.configure import getProxyList as PROXYLIST
-from lib.configure import numThreads as THREADCOUNT
-from lib.configure import config
+from lib.ConfigHelper import ConfigHelper
 
-class ProxyHelper():    
+ch = ConfigHelper()
+
+class ProxyHelper():
 
     def __init__(self):
         self.session = requests.Session()
-        self.proxies = PROXYLIST()
-        self.numProxies = len(PROXYLIST())
+        self.proxies = ch.getProxies()
+        self.numProxies = len(ch.getProxies())
         self.print_lock = threading.Lock()
         self.queue = Queue()
         self.good = []
@@ -59,7 +59,7 @@ class ProxyHelper():
         start = time.time()
 
         print("Starting up threads...")
-        for x in range(THREADCOUNT()):
+        for x in range(ch.numThreads()):
             t = threading.Thread(target = self.threader)
             t.daemon = True
             t.start()
@@ -85,6 +85,6 @@ class ProxyHelper():
         numBad = len(self.bad)
         print("\nSearched %s proxies and filtered out %s bad proxies in %s seconds" % (self.numProxies, numBad, total))
 
-        path = "proxy_lists/%s" % config["proxy"]["proxyList"]
+        path = "proxy_lists/%s" % ch.getProxies(filename_only=True)
         os.remove(path)
         os.rename('proxy_lists/good_proxies.txt', path)
