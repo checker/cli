@@ -7,7 +7,6 @@
 This is a script I made a while back to check the availability of OG words as handles on the various social media platforms. For the most part, it works with any site that has web-based profile pages.
 
 ### Known Supported Services
-- ~~Minecraft~~ - For your Minecraft checking needs, check out [this](http://www.mc-market.org/resources/4480/) awesome checker instead!
 - Twitter (currently broken)
 - Instagram (currently broken)
 - Steam ID URLs
@@ -21,10 +20,13 @@ This is a script I made a while back to check the availability of OG words as ha
 
 
 ### Known Unsupported Services
+- Minecraft ([@bdnh](https://github.com/bdnh/) is working on adding support for Minecraft usernames.)
 - Snapchat
 - Kik
 
 ### Comptability
+Version `1.9` is incompatible with custom site URLs. Use `1.8` for this feature.
+
 Version `1.4-1.9+` is only compatible with Python 3+
 
 Version `1.0-1.3` is compatible with Python 2 & 3
