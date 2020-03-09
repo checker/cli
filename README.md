@@ -1,7 +1,7 @@
 # OGCheckr CLI
 
 [![Gitter](https://badges.gitter.im/checker/cli.svg)](https://gitter.im/checker/cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-![Discord](https://img.shields.io/discord/368060065170849793?color=blueviolet&label=Discord)
+![Discord](https://img.shields.io/discord/488540747361026058?color=blueviolet&label=Discord)
 
 ### About
 This is a script I made a while back to check the availability of OG words as handles on the various social media platforms. For the most part, it works with any site that has web-based profile pages.
@@ -68,7 +68,7 @@ If it says the file cannot be found, you are using an outdated version of this p
 python OGCheckr.py
 ```
 
-If you still need help, please join the [CrocBuzz Studios Discord community](https://discord.gg/hpbQayV) for free support :)
+If you still need help, please join the [Domaincord Discord community](https://domaincord.com/discord) for free support. Just be sure to post your questions in the #ogcheckr-cli channel under the Product Support category. :)
 
 ### Contributing 
 As this is just a personal side project, I only work on it when I have time, so I would love your help to make improvements! Just make a pull request and I'll review the changes as soon as I can. 
@@ -82,4 +82,4 @@ If you would like to see further improvements and updates for free, please consi
 [Square Cash](https://cash.me/$croc)
 
 For additional information and installation instructions, view the wiki.
-https://github.com/crock/cli-checker/wiki/
+https://github.com/checker/cli/wiki/
