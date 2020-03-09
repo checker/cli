@@ -1,7 +1,7 @@
 # OGCheckr CLI
 
 [![Gitter](https://badges.gitter.im/checker/cli.svg)](https://gitter.im/checker/cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-![Discord](https://img.shields.io/discord/488540747361026058?color=blueviolet&label=Discord)
+[![Discord](https://img.shields.io/discord/488540747361026058?color=blueviolet&label=Discord)](https://domaincord.com/discord)
 
 ### About
 This is a script I made a while back to check the availability of OG words as handles on the various social media platforms. For the most part, it works with any site that has web-based profile pages.
