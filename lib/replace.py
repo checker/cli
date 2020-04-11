@@ -1,4 +1,5 @@
 import re
+import sys
 from lib.ConfigHelper import ConfigHelper, PLACEHOLDER
 
 ch = ConfigHelper()

@@ -25,7 +25,7 @@ This is a script I made a while back to check the availability of OG words as ha
 - Kik
 
 ### Comptability
-Version `1.9` is incompatible with custom site URLs. Use `1.8` for this feature.
+Version `1.9.0` is incompatible with custom site URLs. Please revert back to `1.8` via the Release tab on GitHub or upgrade to 1.9.1 which patched the bug.
 
 Version `1.4-1.9+` is only compatible with Python 3+
 

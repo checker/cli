@@ -27,7 +27,6 @@ def requestJob(item):
         with print_lock:
             print("["+threading.current_thread().name+"] "+word+" is UNAVAILABLE on pastebin because it has illegal length.")
     else:
-
         link = replace(word)
         s = requests.Session()
         if ch.enableProxy():

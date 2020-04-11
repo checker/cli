@@ -27,7 +27,7 @@ class ProxyHelper():
         }
         try:
             r = self.session.get('https://google.com', timeout=4, proxies=proxyDict)
-            if r.status_code is 200:
+            if r.status_code == 200:
                 self.good.append(proxy)
                 with self.print_lock:
                     print("%s is working..." % proxy)

@@ -3,7 +3,7 @@ import os
 import re
 
 # Regex Patterns
-PLACEHOLDER = r"%%(name|word)%%"
+PLACEHOLDER = r"_(word|name)_"
 URLPATT = r"(^https?:\/\/[-.a-zA-Z0-9]+)"
 DOMAIN = r"(?:https:\/\/)?(?:\w+\.)?(\w+)\.\w+\/?"
 
@@ -13,12 +13,12 @@ config.read('config.ini')
 class ConfigHelper:
 
     def getSite(self):
-        return config.getint('site', 'siteNum', fallback=5,)
+        return config.getint('site', 'siteNum', fallback=5)
 
 
     def getCustomUrl(self):
         url = config.get('site', 'customSite')
-        if re.match(PLACEHOLDER, url):
+        if re.search(PLACEHOLDER, url):
             return url
 
 
