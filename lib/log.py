@@ -30,7 +30,7 @@ def log_result(response, word, link, matches=None):
                 available(word, service, link)
             else:
                 taken(word, service)
-        elif ch.getSite() == 2: #Minecraft
+        elif ch.getSite() == 2: # Minecraft
             obj = response.json()
             if 'name' in obj:
                 taken(word, service)
@@ -46,6 +46,18 @@ def log_result(response, word, link, matches=None):
                 taken(word, service)
         elif ch.getSite() == 8: # Twitch
             taken(word, service)
+        elif ch.getSite() == 15: # Reddit
+            text = response.text
+            if text == "true":
+                available(word, service, link)
+            else:
+                taken(word, service)
+        elif ch.getSite() == 12: # YouTube via checkerapi.com
+            obj = response.json()
+            if obj["status"] == "available":
+                available(word, "YouTube", link)
+            else:
+                taken(word, "YouTube")
         else:
             taken(word, service)
     elif response.status_code == 204:

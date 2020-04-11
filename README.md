@@ -15,8 +15,9 @@ This is a script I made a while back to check the availability of OG words as ha
 - Soundcloud
 - Github
 - About.me
-- YouTube (partial support)
+- YouTube (via CheckerApi.com)
 - Pastebin
+- Reddit
 
 
 ### Known Unsupported Services

@@ -29,13 +29,15 @@ def requestJob(item):
     else:
         link = replace(word)
         s = requests.Session()
+        ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.3"
+        headers = { "user-agent": ua }
         if ch.enableProxy():
             plist = ch.getProxies()
             i = random.randrange(0, plist.__len__())
             sess = ph.setProxy(s, plist[i])
-            r = sess.get(link)
+            r = sess.get(link, headers=headers)
         else:
-            r = s.get(link)
+            r = s.get(link, headers=headers)
         with print_lock:
             log_result(r, word, link)
 

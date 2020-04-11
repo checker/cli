@@ -17,9 +17,10 @@ URLS = {
     9:"https://mixer.com/api/v1/channels/%s",
     10:"https://github.com/%s",
     11:"https://about.me/%s",
-    12:"https://youtube.com/c/%s",
+    12:"https://checkerapi.com/check/youtube/%s",
     13:"http://pastebin.com/u/%s",
-    14:"https://giphy.com/channel/%s"
+    14:"https://giphy.com/channel/%s",
+    15:"https://www.reddit.com/api/username_available.json?user=%s"
 }
 
 
@@ -28,6 +29,8 @@ def replace(word):
     if ch.getSite() == 1:
         x = re.sub(PLACEHOLDER, word, URLS[1])
         return x
+    elif ch.getSite() == 16:
+        x = re.sub(PLACEHOLDER, word, URLS[16])
     else:
         return URLS[ch.getSite()] % word
     
