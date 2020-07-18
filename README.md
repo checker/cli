@@ -42,15 +42,7 @@ On the following screen of the installer, be sure the checkbox next to `Add Pyth
 
 1. Download the zip or clone the repo with Git on your local machine.
 
-2. Install the dependencies using the following command inside Command Prompt (Windows) or Terminal (Mac). If you use `Python.exe`, it will **not** work.
-
-    ```
-    python -m pip install -r requirements.txt
-    ```
-
-4. Edit the `config.ini` inside your favorite text editor. I have put lots of comments to explain what each option does.
-
-5. Now you need to make your terminal know where to find the checker files, so type the following command in Command Prompt or Terminal.
+2. Now you need to make your terminal know where to find the checker files, so type the following command in Command Prompt or Terminal.
 
 ```
 cd path
@@ -58,7 +50,16 @@ cd path
 
 _Note:_ Do not type the actual word `path`. Instead, type the direct path to the username checker folder you downloaded and extracted.
 
-6. Run the script via command line using the following command
+3. Install the dependencies using the following command inside Command Prompt (Windows) or Terminal (Mac). If you use `Python.exe`, it will **not** work.
+
+    ```
+    python -m pip install -r requirements.txt
+    ```
+
+4. Edit the `config.ini` inside your favorite text editor. I have put lots of comments to explain what each option does.
+
+
+5. Run the script via command line using the following command
 
     ```
     python og.py
